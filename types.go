@@ -1,4 +1,4 @@
-package github.com/GabeCordo/commandline
+package commandline
 
 import (
 	"time"
