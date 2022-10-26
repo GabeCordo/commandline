@@ -1,4 +1,4 @@
-package commandline
+package github.com/GabeCordo/commandline
 
 import (
 	"fmt"
