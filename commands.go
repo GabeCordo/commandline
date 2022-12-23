@@ -97,10 +97,16 @@ func (helpCommand HelpCommand) Name() string {
 }
 
 func (helpCommand HelpCommand) Run(cli *CommandLine) TerminateOnCompletion {
-	fmt.Println("etl")
-	fmt.Println("-h\tView helpful information about the etl service")
-	fmt.Println("-d\tEnable debug mode")
-	fmt.Println("-g\tGenerate an ECDSA x509 public and private key pair")
+	fmt.Println("Default Commands:")
+	fmt.Println("help\tView helpful information about the etl service")
+	
+	if len(cli.Commands) > 0 {
+		fmt.Println("Core Commands:")
+
+		for _, command := range cli.Commands {
+			fmt.Println(command.Name())
+		}
+	}
 
 	return true
 }
