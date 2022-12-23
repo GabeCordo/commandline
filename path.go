@@ -64,7 +64,7 @@ func (path Path) File(file string) Path {
 
 func (path Path) Exists() bool {
 	_, err := os.Stat(path.value)
-	return os.IsExist(err)
+	return err == nil
 }
 
 func (path Path) DoesNotExist() bool {
