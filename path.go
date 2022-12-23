@@ -64,7 +64,7 @@ func (path Path) File(file string) Path {
 
 func (path Path) Exists() bool {
 	_, err := os.Stat(path.value)
-	return err == nil
+	return os.IsExist(err)
 }
 
 func (path Path) DoesNotExist() bool {
@@ -114,4 +114,12 @@ func (path Path) MkDir() error {
 	}
 
 	return os.Mkdir(path.value, DefaultFilePermissions)
+}
+
+func (path Path) Create() (*os.File, error) {
+	if path.Exists() {
+		panic("cannot create a file for " + path.value + " as it already exists")
+	}
+
+	return os.Create(path.value)
 }

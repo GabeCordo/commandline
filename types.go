@@ -24,10 +24,11 @@ type CommandLine struct {
 	Config *Config
 
 	Flags struct {
-		Debug  bool
-		Create bool
-		Delete bool
-		Show   bool
+		Debug   bool
+		Create  bool
+		Delete  bool
+		Show    bool
+		Install bool
 	}
 
 	MetaData struct {

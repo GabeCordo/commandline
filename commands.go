@@ -68,6 +68,24 @@ func (sc ShowCommand) Run(cli *CommandLine) TerminateOnCompletion {
 	return false
 }
 
+// INSTALL COMMAND START
+
+type InstallCommand struct {
+	name string
+}
+
+func (ic InstallCommand) Name() string {
+	return ic.name
+}
+
+func (ic InstallCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.Flags.Install = true
+
+	return false
+}
+
+// INSTALL COMMAND END
+
 // HELP COMMAND START
 
 type HelpCommand struct {
