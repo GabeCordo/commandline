@@ -29,6 +29,7 @@ type CommandLine struct {
 		Delete  bool
 		Show    bool
 		Install bool
+		Add     bool
 	}
 
 	MetaData struct {

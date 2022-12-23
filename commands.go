@@ -86,6 +86,19 @@ func (ic InstallCommand) Run(cli *CommandLine) TerminateOnCompletion {
 
 // INSTALL COMMAND END
 
+type AddCommand struct {
+	name string
+}
+
+func (addCommand AddCommand) Name() string {
+	return addCommand.name
+}
+
+func (addCommand AddCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.Flags.Add = true
+	return false
+}
+
 // HELP COMMAND START
 
 type HelpCommand struct {
@@ -99,7 +112,7 @@ func (helpCommand HelpCommand) Name() string {
 func (helpCommand HelpCommand) Run(cli *CommandLine) TerminateOnCompletion {
 	fmt.Println("Default Commands:")
 	fmt.Println("help\tView helpful information about the etl service")
-	
+
 	if len(cli.Commands) > 0 {
 		fmt.Println("Core Commands:")
 

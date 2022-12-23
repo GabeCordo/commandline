@@ -34,6 +34,8 @@ func NewCommandLine(path ...Path) *CommandLine {
 	cli.AddCommand([]string{"delete"}, DeleteCommand{"delete"})
 	cli.AddCommand([]string{"show"}, ShowCommand{"show"})
 	cli.AddCommand([]string{"debug"}, DebugCommand{"debug"})
+	cli.AddCommand([]string{"install"}, InstallCommand{"command"})
+	cli.AddCommand([]string{"add"}, AddCommand{"add"})
 
 	return cli
 }
