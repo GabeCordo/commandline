@@ -16,8 +16,11 @@ func (helpCommand HelpCommand) Run(cli *CommandLine) TerminateOnCompletion {
 	if len(cli.commands) > 0 {
 		fmt.Println("Core commands:")
 
-		for _, command := range cli.commands {
-			fmt.Println(command.Name())
+		for _, commandWrapper := range cli.commands {
+			fmt.Println(commandWrapper.identifier)
+			for flag, description := range commandWrapper.variants {
+				fmt.Printf("\t%s => %s", flag, description)
+			}
 		}
 	}
 
