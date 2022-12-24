@@ -39,7 +39,7 @@ func (commandWrapper *CommandWrapper) Help(variant ...string) string {
 	}
 
 	// if no variant type was passed to this function, output the default command description
-	if len(variant) == 0 {
+	if len(variant) == 1 {
 		return commandWrapper.description
 	} else {
 		return commandWrapper.variants[variant[0]]
@@ -51,7 +51,7 @@ func (commandWrapper *CommandWrapper) SetDescription(args ...string) *CommandWra
 		panic("CommandWrapper.Description takes 0 to 1 arguments, too many were passed into it")
 	}
 
-	if len(args) == 0 {
+	if len(args) == 1 {
 		commandWrapper.description = args[0]
 	} else {
 		commandWrapper.variants[args[0]] = args[1]
@@ -65,7 +65,7 @@ func (commandWrapper CommandWrapper) Description(args ...string) string {
 		panic("CommandWrapper.Description takes 0 to 1 arguments, too many were passed into it")
 	}
 
-	if len(args) == 0 {
+	if len(args) == 1 {
 		return commandWrapper.description
 	} else {
 		return commandWrapper.variants[args[0]]
