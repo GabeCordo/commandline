@@ -1,0 +1,124 @@
+package commandline
+
+import "github.com/GabeCordo/toolchain/files"
+
+// DEBUG COMMAND START
+
+type DebugCommand struct {
+}
+
+func (dc DebugCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Debug] = true
+
+	return Continue // do not terminate
+}
+
+// CREATE COMMAND START
+
+type CreateCommand struct {
+}
+
+func (cc CreateCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Create] = true
+
+	return Continue // do not terminate
+}
+
+// DELETE COMMAND START
+
+type DeleteCommand struct {
+}
+
+func (dc DeleteCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Delete] = true
+
+	return Continue // do not terminate
+}
+
+// SHOW COMMAND START
+
+type ShowCommand struct {
+}
+
+func (sc ShowCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Show] = true
+
+	return Continue
+}
+
+// INSTALL COMMAND START
+
+type InstallCommand struct {
+}
+
+func (ic InstallCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Install] = true
+
+	return Continue
+}
+
+// ADD COMMAND
+
+type AddCommand struct {
+}
+
+func (addCommand AddCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Add] = true
+
+	return Continue
+}
+
+// UPDATE COMMAND
+
+type UpdateCommand struct {
+}
+
+func (uc UpdateCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Update] = true
+
+	return Continue
+}
+
+// REVOKE COMMAND
+
+type RevokeCommand struct {
+}
+
+func (rc RevokeCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Revoke] = true
+
+	return Continue
+}
+
+// DEFAULT COMMAND LINE
+
+func NewCommandLine(path ...files.Path) *CommandLine {
+
+	cli := new(CommandLine)
+
+	// there may be a persistent JSON file to load Config data from
+	if len(path) > 0 {
+		config := new(Config)
+		config.FromJson(path[0])
+
+		cli.Config = config
+	}
+
+	// make Command map
+	cli.commands = make(map[string]*CommandWrapper)
+
+	// help commands
+	cli.AddCommand("help", HelpCommand{}).SetDescription("displays all commands that can be invoked")
+	cli.AddCommand("?", HelpScopeCommand{}).SetDescription("displays help information for a command or command flag variant")
+	// cli flag sub-commands
+	cli.AddCommand("create", CreateCommand{})
+	cli.AddCommand("delete", DeleteCommand{})
+	cli.AddCommand("show", ShowCommand{})
+	cli.AddCommand("debug", DebugCommand{})
+	cli.AddCommand("install", InstallCommand{})
+	cli.AddCommand("add", AddCommand{})
+	cli.AddCommand("update", AddCommand{})
+	cli.AddCommand("revoke", RevokeCommand{})
+
+	return cli
+}

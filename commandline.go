@@ -11,33 +11,33 @@ const (
 	FinalArg string = ""
 )
 
-func NewCommandLine(path ...Path) *CommandLine {
+type TerminateOnCompletion bool
 
-	cli := new(CommandLine)
+const (
+	Terminate TerminateOnCompletion = true
+	Continue  TerminateOnCompletion = false
+)
 
-	// there may be a persistent JSON file to load Config data from
-	if len(path) > 0 {
-		config := new(Config)
-		config.FromJson(path[0])
+type CommandLine struct {
+	Config *Config
 
-		cli.Config = config
+	flags [numOfFlags]bool
+
+	MetaData struct {
+		WorkingDirectory string
+		TimeCalled       time.Time
 	}
 
-	// make Command map
-	cli.Commands = make(map[string]Command)
+	args        []string
+	numOfArgs   int
+	argsPointer int
 
-	// help commands
-	cli.AddCommand([]string{"help"}, HelpCommand{"help"})
+	commands map[string]*CommandWrapper
+}
 
-	// cli flag sub-commands
-	cli.AddCommand([]string{"create"}, CreateCommand{"create"})
-	cli.AddCommand([]string{"delete"}, DeleteCommand{"delete"})
-	cli.AddCommand([]string{"show"}, ShowCommand{"show"})
-	cli.AddCommand([]string{"debug"}, DebugCommand{"debug"})
-	cli.AddCommand([]string{"install"}, InstallCommand{"command"})
-	cli.AddCommand([]string{"add"}, AddCommand{"add"})
-
-	return cli
+func (cli *CommandLine) CollectMetaData() {
+	cli.MetaData.TimeCalled = time.Now()
+	cli.MetaData.WorkingDirectory, _ = os.Getwd()
 }
 
 func (cli *CommandLine) NextArg() string {
@@ -50,36 +50,15 @@ func (cli *CommandLine) NextArg() string {
 	}
 }
 
-func (cli *CommandLine) CollectMetaData() {
-	cli.MetaData.TimeCalled = time.Now()
-	cli.MetaData.WorkingDirectory, _ = os.Getwd()
-}
-
-func (cli *CommandLine) AddCommand(identifiers []string, function Command) {
-	// loop over every identifier the developer wants to associate with the function
-	// and ensure that no mapping already exists for the CommandLine instance
-	//
-	// Why wouldn't we just reject the collided identifiers and bind the one's
-	// that remain?
-	//
-	// This would provide the developer with a false sense of success and could
-	// open up the code to misinterpretation. The developer is not getting any
-	// feedback on what identifiers are being accepted and even if we did provide
-	// that back, what says they are verifying this information?
-	//
-	for _, identifier := range identifiers {
-		// if there is a collision, tell the developer exactly why the collision occurred
-		// in-case they accidentally gave another function an unintended identifier
-		if otherFunction, found := cli.Commands[identifier]; found {
-			st := "cannot bind %s to %s as an association already exists for %s"
-			s := fmt.Sprintf(st, identifier, function.Name(), otherFunction.Name())
-			panic(s)
-		}
+func (cli *CommandLine) AddCommand(identifier string, function Command) *CommandWrapper {
+	if _, found := cli.commands[identifier]; found {
+		panic("the command " + identifier + " already exists")
 	}
 
-	for _, identifier := range identifiers {
-		cli.Commands[identifier] = function
-	}
+	commandWrapper := NewCommandWrapper(identifier, function)
+	cli.commands[identifier] = commandWrapper
+
+	return commandWrapper
 }
 
 // UnknownCommand
@@ -89,7 +68,7 @@ func (cli CommandLine) UnknownCommand(identifier string) TerminateOnCompletion {
 	// populate a map with all keywords where the first char of the keyword matches the first char of the identifier
 	// O(keywords)
 	keywords := make(map[string]int)
-	for keyword, _ := range cli.Commands {
+	for keyword, _ := range cli.commands {
 		if keyword[0] == identifier[0] {
 			keywords[keyword] = 1
 		}
@@ -133,6 +112,14 @@ func (cli CommandLine) UnknownCommand(identifier string) TerminateOnCompletion {
 	return true // terminate since we don't know how to execute all commands
 }
 
+func (cli CommandLine) Flag(flag Flag) bool {
+	if flag == NotAFlag {
+		return false
+	} else {
+		return cli.flags[flag]
+	}
+}
+
 func (cli *CommandLine) Run() {
 
 	// this data can be useful for capturing the environment the exe was called
@@ -145,8 +132,8 @@ func (cli *CommandLine) Run() {
 
 	for arg := cli.args[0]; arg != FinalArg; arg = cli.NextArg() {
 		var terminateFlag TerminateOnCompletion = false
-		if command, found := cli.Commands[arg]; found {
-			terminateFlag = command.Run(cli)
+		if commandWrapper, found := cli.commands[arg]; found {
+			terminateFlag = commandWrapper.Command().Run(cli)
 		} else {
 			terminateFlag = cli.UnknownCommand(arg)
 		}

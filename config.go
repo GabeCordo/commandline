@@ -2,6 +2,7 @@ package commandline
 
 import (
 	"encoding/json"
+	"github.com/GabeCordo/toolchain/files"
 )
 
 const (
@@ -9,12 +10,21 @@ const (
 	DefaultJSONIndent string = " "
 )
 
+type Config struct {
+	Version     float32 `json:"version"`
+	UserProfile struct {
+		FirstName string `json:"first-Name"`
+		LastName  string `json:"last-Name"`
+		Email     string `json:"email"`
+	} `json:"profile"`
+}
+
 func NewConfig() *Config {
 	config := new(Config)
 	return config
 }
 
-func (config *Config) ToJson(path Path) error {
+func (config *Config) ToJson(path files.Path) error {
 	if path.DoesNotExist() {
 		panic("the path is not valid, it cannot be converted to JSON")
 	}
@@ -27,7 +37,7 @@ func (config *Config) ToJson(path Path) error {
 	return path.Write(bytes)
 }
 
-func (config *Config) FromJson(path Path) *Config {
+func (config *Config) FromJson(path files.Path) *Config {
 	if path.DoesNotExist() {
 		panic("the path is not valid, the config cannot be updated to match the JSON file")
 	}
