@@ -8,6 +8,7 @@ type CommandWrapper struct {
 	command     Command // IMMUTABLE
 	identifier  string  // IMMUTABLE
 	description string
+	category    string
 	variants    map[string]string
 }
 
@@ -53,7 +54,7 @@ func (commandWrapper *CommandWrapper) SetDescription(args ...string) *CommandWra
 
 	if len(args) == 1 {
 		commandWrapper.description = args[0]
-	} else {
+	} else if len(args) == 2 {
 		commandWrapper.variants[args[0]] = args[1]
 	}
 
@@ -70,4 +71,13 @@ func (commandWrapper CommandWrapper) Description(args ...string) string {
 	} else {
 		return commandWrapper.variants[args[0]]
 	}
+}
+
+func (commandWrapper *CommandWrapper) SetCategory(category string) *CommandWrapper {
+	commandWrapper.category = category
+	return commandWrapper
+}
+
+func (commandWrapper CommandWrapper) Category() string {
+	return commandWrapper.category
 }

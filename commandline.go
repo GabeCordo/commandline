@@ -130,6 +130,10 @@ func (cli *CommandLine) Run() {
 	cli.numOfArgs = len(cli.args)
 	cli.argsPointer = 0
 
+	if len(cli.args) == 0 {
+		return // no arguments to read
+	}
+
 	for arg := cli.args[0]; arg != FinalArg; arg = cli.NextArg() {
 		var terminateFlag TerminateOnCompletion = false
 		if commandWrapper, found := cli.commands[arg]; found {
@@ -143,5 +147,4 @@ func (cli *CommandLine) Run() {
 		}
 	}
 	// stop reading cli arguments
-
 }

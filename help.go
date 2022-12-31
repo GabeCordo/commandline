@@ -10,18 +10,35 @@ type HelpCommand struct {
 }
 
 func (helpCommand HelpCommand) Run(cli *CommandLine) TerminateOnCompletion {
-	fmt.Println("Default commands:")
-	fmt.Println("help\tView helpful information about the etl service")
+	categories := make(map[string][]*CommandWrapper)
 
-	if len(cli.commands) > 0 {
-		fmt.Println("Core commands:")
+	for _, commandWrapper := range cli.commands {
+		category := commandWrapper.Category()
+		if array, found := categories[category]; found {
+			categories[category] = append(array, commandWrapper)
+		} else {
+			categories[category] = make([]*CommandWrapper, 0)
+			categories[category] = append(categories[category], commandWrapper)
+		}
+	}
 
-		for _, commandWrapper := range cli.commands {
-			fmt.Println(commandWrapper.identifier)
-			for flag, description := range commandWrapper.variants {
-				fmt.Printf("\t%s => %s", flag, description)
+	for category, commandWrapperArray := range categories {
+		// do not print a category if it is an empty string
+		if len(category) != 0 {
+			fmt.Printf("[%s]\n", category)
+		}
+		// group commands together by category
+		for _, commandWrapper := range commandWrapperArray {
+			if category == "flags" {
+				fmt.Printf("\t%s", commandWrapper.identifier)
+			} else {
+				fmt.Printf("\t%s\t%s\n", commandWrapper.identifier, commandWrapper.description)
+				for flag, description := range commandWrapper.variants {
+					fmt.Printf("\t\t%s => %s\n", flag, description)
+				}
 			}
 		}
+		fmt.Println()
 	}
 
 	return Terminate

@@ -108,17 +108,17 @@ func NewCommandLine(path ...files.Path) *CommandLine {
 	cli.commands = make(map[string]*CommandWrapper)
 
 	// help commands
-	cli.AddCommand("help", HelpCommand{}).SetDescription("displays all commands that can be invoked")
-	cli.AddCommand("?", HelpScopeCommand{}).SetDescription("displays help information for a command or command flag variant")
+	cli.AddCommand("help", HelpCommand{}).SetCategory("core").SetDescription("displays all commands that can be invoked")
+	cli.AddCommand("?", HelpScopeCommand{}).SetCategory("core").SetDescription("displays help information for a command or command flag variant")
 	// cli flag sub-commands
-	cli.AddCommand("create", CreateCommand{})
-	cli.AddCommand("delete", DeleteCommand{})
-	cli.AddCommand("show", ShowCommand{})
-	cli.AddCommand("debug", DebugCommand{})
-	cli.AddCommand("install", InstallCommand{})
-	cli.AddCommand("add", AddCommand{})
-	cli.AddCommand("update", AddCommand{})
-	cli.AddCommand("revoke", RevokeCommand{})
+	cli.AddCommand("create", CreateCommand{}).SetCategory("flags")
+	cli.AddCommand("delete", DeleteCommand{}).SetCategory("flags")
+	cli.AddCommand("show", ShowCommand{}).SetCategory("flags")
+	cli.AddCommand("debug", DebugCommand{}).SetCategory("flags")
+	cli.AddCommand("install", InstallCommand{}).SetCategory("flags")
+	cli.AddCommand("add", AddCommand{}).SetCategory("flags")
+	cli.AddCommand("update", AddCommand{}).SetCategory("flags")
+	cli.AddCommand("revoke", RevokeCommand{}).SetCategory("flags")
 
 	return cli
 }
