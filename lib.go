@@ -117,7 +117,7 @@ func NewCommandLine(path ...files.Path) *CommandLine {
 	cli.AddCommand("debug", DebugCommand{}).SetCategory("flags")
 	cli.AddCommand("install", InstallCommand{}).SetCategory("flags")
 	cli.AddCommand("add", AddCommand{}).SetCategory("flags")
-	cli.AddCommand("update", AddCommand{}).SetCategory("flags")
+	cli.AddCommand("update", UpdateCommand{}).SetCategory("flags")
 	cli.AddCommand("revoke", RevokeCommand{}).SetCategory("flags")
 
 	return cli
