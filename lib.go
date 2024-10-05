@@ -46,6 +46,17 @@ func (sc ShowCommand) Run(cli *CommandLine) TerminateOnCompletion {
 	return Continue
 }
 
+// SWITCH COMMAND START
+
+type SwitchCommand struct {
+}
+
+func (sc SwitchCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Switch] = true
+
+	return Continue
+}
+
 // INSTALL COMMAND START
 
 type InstallCommand struct {
@@ -114,6 +125,7 @@ func NewCommandLine(path ...files.Path) *CommandLine {
 	cli.AddCommand("create", CreateCommand{}).SetCategory("flags")
 	cli.AddCommand("delete", DeleteCommand{}).SetCategory("flags")
 	cli.AddCommand("show", ShowCommand{}).SetCategory("flags")
+	cli.AddCommand("switch", SwitchCommand{}).SetCategory("flags")
 	cli.AddCommand("debug", DebugCommand{}).SetCategory("flags")
 	cli.AddCommand("install", InstallCommand{}).SetCategory("flags")
 	cli.AddCommand("add", AddCommand{}).SetCategory("flags")
