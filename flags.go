@@ -14,14 +14,15 @@ const (
 	Update
 	Revoke
 	Switch
+	Stop
 	NotAFlag
 )
 
 const (
-	numOfFlags uint8 = 9
+	numOfFlags uint8 = 11
 )
 
-var strToFlagArr = [...]string{"debug", "create", "delete", "show", "install", "add", "update", "revoke", "switch"}
+var strToFlagArr = [...]string{"debug", "create", "delete", "show", "install", "add", "update", "revoke", "switch", "stop"}
 
 func (flag Flag) ToString() string {
 	if flag == NotAFlag {
@@ -49,6 +50,8 @@ func FlagFromString(strFlag string) Flag {
 		return Revoke
 	} else if strFlag == "switch" {
 		return Switch
+	} else if strFlag == "stop" {
+		return Stop
 	} else {
 		return NotAFlag
 	}

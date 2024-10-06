@@ -101,6 +101,17 @@ func (rc RevokeCommand) Run(cli *CommandLine) TerminateOnCompletion {
 	return Continue
 }
 
+// STOP COMMAND
+
+type StopCommand struct {
+}
+
+func (command StopCommand) Run(cli *CommandLine) TerminateOnCompletion {
+	cli.flags[Stop] = true
+
+	return Continue
+}
+
 // DEFAULT COMMAND LINE
 
 func NewCommandLine(path ...files.Path) *CommandLine {
@@ -131,6 +142,7 @@ func NewCommandLine(path ...files.Path) *CommandLine {
 	cli.AddCommand("add", AddCommand{}).SetCategory("flags")
 	cli.AddCommand("update", UpdateCommand{}).SetCategory("flags")
 	cli.AddCommand("revoke", RevokeCommand{}).SetCategory("flags")
+	cli.AddCommand("stop", StopCommand{}).SetCategory("flags")
 
 	return cli
 }
