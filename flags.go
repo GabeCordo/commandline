@@ -1,6 +1,6 @@
 package commandline
 
-import "github.com/GabeCordo/toolchain/strings"
+const EmptyString string = ""
 
 type Flag uint32
 
@@ -26,7 +26,7 @@ var strToFlagArr = [...]string{"debug", "create", "delete", "show", "install", "
 
 func (flag Flag) ToString() string {
 	if flag == NotAFlag {
-		return strings.EmptyString
+		return EmptyString
 	}
 	return strToFlagArr[flag]
 }

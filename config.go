@@ -2,7 +2,7 @@ package commandline
 
 import (
 	"encoding/json"
-	"github.com/GabeCordo/toolchain/files"
+	"github.com/GabeCordo/commandline/paths"
 )
 
 const (
@@ -24,7 +24,7 @@ func NewConfig() *Config {
 	return config
 }
 
-func (config *Config) ToJson(path files.Path) error {
+func (config *Config) ToJson(path paths.Path) error {
 	if path.DoesNotExist() {
 		panic("the path is not valid, it cannot be converted to JSON")
 	}
@@ -37,7 +37,7 @@ func (config *Config) ToJson(path files.Path) error {
 	return path.Write(bytes)
 }
 
-func (config *Config) FromJson(path files.Path) *Config {
+func (config *Config) FromJson(path paths.Path) *Config {
 	if path.DoesNotExist() {
 		panic("the path is not valid, the config cannot be updated to match the JSON file")
 	}

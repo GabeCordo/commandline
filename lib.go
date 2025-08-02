@@ -1,6 +1,8 @@
 package commandline
 
-import "github.com/GabeCordo/toolchain/files"
+import (
+	"github.com/GabeCordo/commandline/paths"
+)
 
 // DEBUG COMMAND START
 
@@ -114,7 +116,7 @@ func (command StopCommand) Run(cli *CommandLine) TerminateOnCompletion {
 
 // DEFAULT COMMAND LINE
 
-func NewCommandLine(path ...files.Path) *CommandLine {
+func NewCommandLine(path ...paths.Path) *CommandLine {
 
 	cli := new(CommandLine)
 
